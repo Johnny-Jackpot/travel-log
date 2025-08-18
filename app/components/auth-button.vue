@@ -13,7 +13,11 @@ const authStore = useAuthStore();
       {{ authStore.user.name }}
     </div>
     <ul tabindex="0" class="dropdown-content menu bg-base-200 rounded-box z-1 w-52 p-2 shadow-sm">
-      <li><a>Sign Out</a></li>
+      <li>
+        <NuxtLink to="/sign-out">
+          Sign Out
+        </NuxtLink>
+      </li>
     </ul>
   </div>
   <button v-else class="btn btn-accent" :disabled="authStore.loading" @click="authStore.signIn">
