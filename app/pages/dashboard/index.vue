@@ -6,7 +6,7 @@ const isSidebarOpen = ref(true);
   <div class="flex-1 flex">
     <div class="bg-base-100 transition-all duration-300" :class="isSidebarOpen ? 'w-64' : 'w-12'">
       <div
-        class="flex hover:cursor-pointer hover:bg-base-200 p-2" :class="isSidebarOpen ? 'justify-end' : 'justify-center'"
+        class="flex hover:cursor-pointer hover:bg-base-200 py-2 px-1" :class="isSidebarOpen ? 'justify-end' : 'justify-start'"
         @click="isSidebarOpen = !isSidebarOpen"
       >
         <Icon :name="isSidebarOpen ? 'tabler:chevron-left' : 'tabler:chevron-right'" size="32" />
