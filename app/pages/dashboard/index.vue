@@ -4,7 +4,7 @@ const isSidebarOpen = ref(true);
 
 <template>
   <div class="flex-1 flex">
-    <div class="bg-base-100 transition-all duration-300 overflow-hidden" :class="isSidebarOpen ? 'w-64' : 'w-10'">
+    <div class="bg-base-100 transition-all duration-300 overflow-hidden" :class="isSidebarOpen ? 'w-48' : 'w-10'">
       <div class="flex hover:cursor-pointer hover:bg-base-200 p-2 justify-end" @click="isSidebarOpen = !isSidebarOpen">
         <Icon :name="isSidebarOpen ? 'tabler:chevron-left' : 'tabler:chevron-right'" size="32" />
       </div>
