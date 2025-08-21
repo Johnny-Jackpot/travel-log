@@ -17,31 +17,16 @@ const route = useRoute();
       class="flex justify-start gap-2 p-2 hover:bg-base-300 hover:cursor-pointer flex-nowrap"
     >
       <Icon :name="props.icon" size="24" class="flex-shrink-0" />
-      <Transition name="grow">
-        <span v-show="props.showLabel" class="whitespace-nowrap">{{ props.label }}</span>
-      </Transition>
+      <span
+        class="whitespace-nowrap transition-all duration-300"
+        :class="props.showLabel ? 'opacity-100 w-auto' : 'opacity-0 w-0'"
+      >
+        {{ props.label }}
+      </span>
     </NuxtLink>
   </div>
 </template>
 
 <style scoped>
-.grow-enter-active {
-  animation: grow 0.3s;
-}
 
-.grow-leave-active {
-  animation: grow 0.1s reverse;
-}
-
-@keyframes grow {
-  0% {
-    opacity: 0;
-    width: 0;
-  }
-
-  100% {
-    opacity: 1;
-    width: auto;
-  }
-}
 </style>
