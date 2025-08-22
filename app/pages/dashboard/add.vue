@@ -1,5 +1,12 @@
 <script setup lang="ts">
+import { InsertLocation } from "~~/lib/db/schema";
 
+const { handleSubmit, errors } = useForm({
+  validationSchema: toTypedSchema(InsertLocation),
+});
+
+const onSubmit = handleSubmit(() => {
+});
 </script>
 
 <template>
@@ -14,43 +21,20 @@
         You can add specific times you visited this location after adding it.
       </p>
     </div>
-    <form class="flex flex-col gap-2">
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">
-          Name
-        </legend>
-        <input name="name" type="text" class="input w-full">
-        <!-- <p class="label">
-          Optional
-        </p> -->
-      </fieldset>
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">
-          Description
-        </legend>
-        <textarea name="description" type="text" class="input w-full h-24" />
-        <!-- <p class="label">
-          Optional
-        </p> -->
-      </fieldset>
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">
-          Latitude
-        </legend>
-        <input name="lat" type="number" class="input w-full">
-        <!-- <p class="label">
-          Optional
-        </p> -->
-      </fieldset>
-      <fieldset class="fieldset">
-        <legend class="fieldset-legend">
-          Longitude
-        </legend>
-        <input name="long" type="number" class="input w-full">
-        <!-- <p class="label">
-          Optional
-        </p> -->
-      </fieldset>
+    <form class="flex flex-col gap-2" @submit.prevent="onSubmit">
+      <AppFormField name="name" label="Name" :error="errors.name" />
+      <AppFormField
+        name="description" label="Description" :error="errors.description"
+        type="textarea"
+      />
+      <AppFormField
+        name="lat" label="Latitude" type="number"
+        :error="errors.lat"
+      />
+      <AppFormField
+        name="long" label="Longitude" type="number"
+        :error="errors.long"
+      />
       <div class="flex justify-end gap-2">
         <button type="button" class="btn btn-outline">
           <Icon name="tabler:arrow-left" size="24" />
