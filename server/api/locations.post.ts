@@ -2,7 +2,7 @@ import db from "~~/lib/db";
 import { InsertLocation, location } from "~~/lib/db/schema";
 
 export default defineEventHandler(async (event) => {
-  if (!event.context.user) {
+  if (!event.context?.user) {
     return sendError(event, createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
@@ -32,11 +32,11 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
-  db.insert(location).values({
+  const [createdLocation] = await db.insert(location).values({
     ...result.data,
-    userId: 1,
+    userId: event.context.user.id,
     slug: result.data.name.replaceAll(" ", "-").toLowerCase(),
-  });
+  }).returning();
 
-  return result.data;
+  return createdLocation;
 });
