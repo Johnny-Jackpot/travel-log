@@ -13,7 +13,7 @@ const props = defineProps<{
       {{ props.label }}
     </legend>
     <Field
-      :as="props.type || 'input'"
+      :as="props.type === 'textarea' ? 'textarea' : 'input'"
       :name="props.name" :type="props.type || 'text'" class="input w-full"
       :class="{
         'input-error': props.error,

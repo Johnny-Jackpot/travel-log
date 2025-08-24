@@ -1,12 +1,27 @@
 <script setup lang="ts">
+import type { FetchError } from "ofetch";
+
 import { InsertLocation } from "~~/lib/db/schema";
 
 const router = useRouter();
+
 const { handleSubmit, errors, meta } = useForm({
   validationSchema: toTypedSchema(InsertLocation),
 });
 
-const onSubmit = handleSubmit(() => {
+const submitError = ref("");
+
+const onSubmit = handleSubmit(async (values) => {
+  try {
+    await $fetch("/api/locations", {
+      method: "post",
+      body: values,
+    });
+  }
+  catch (e) {
+    const error = e as FetchError;
+    submitError.value = error.statusMessage || "An unknown error occured.";
+  }
 });
 
 onBeforeRouteLeave(() => {
@@ -29,6 +44,9 @@ onBeforeRouteLeave(() => {
         It can be a city, country, or any point of interest.
         You can add specific times you visited this location after adding it.
       </p>
+    </div>
+    <div v-if="submitError" role="alert" class="alert alert-error">
+      <span>{{ submitError }}</span>
     </div>
     <form class="flex flex-col gap-2" @submit.prevent="onSubmit">
       <AppFormField name="name" label="Name" :error="errors.name" />
