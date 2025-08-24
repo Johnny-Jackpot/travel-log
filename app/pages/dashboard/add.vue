@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import type { FetchError } from "ofetch";
+import type { ZodTypeAny } from "zod";
 
 import { InsertLocation } from "~~/lib/db/schema";
 
 const router = useRouter();
 
-const { handleSubmit, errors, meta } = useForm({
-  validationSchema: toTypedSchema(InsertLocation),
+const { handleSubmit, errors, meta, setErrors } = useForm({
+  validationSchema: toTypedSchema(InsertLocation as unknown as ZodTypeAny),
 });
 
 const submitError = ref("");
@@ -20,6 +21,9 @@ const onSubmit = handleSubmit(async (values) => {
   }
   catch (e) {
     const error = e as FetchError;
+    if (error.data?.data) {
+      setErrors(error.data?.data);
+    }
     submitError.value = error.statusMessage || "An unknown error occured.";
   }
 });
