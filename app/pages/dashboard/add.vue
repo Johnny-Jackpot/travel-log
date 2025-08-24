@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { InsertLocation } from "~~/lib/db/schema";
 
-const { handleSubmit, errors } = useForm({
+const router = useRouter();
+const { handleSubmit, errors, meta } = useForm({
   validationSchema: toTypedSchema(InsertLocation),
 });
 
 const onSubmit = handleSubmit(() => {
+});
+
+onBeforeRouteLeave(() => {
+  if (!meta.value.dirty) {
+    return true;
+  }
+  // eslint-disable-next-line no-alert
+  return window.confirm("Are you sure you want to leave? All unsaved changes will be lost.");
 });
 </script>
 
@@ -36,13 +45,11 @@ const onSubmit = handleSubmit(() => {
         :error="errors.long"
       />
       <div class="flex justify-end gap-2">
-        <button type="button" class="btn btn-outline">
-          <Icon name="tabler:arrow-left" size="24" />
-          Cancel
+        <button type="button" class="btn btn-outline" @click="router.back()">
+          <Icon name="tabler:arrow-left" size="24" /> Cancel
         </button>
         <button type="submit" class="btn btn-primary">
-          Add
-          <Icon name="tabler:circle-plus-filled" size="24" />
+          Add <Icon name="tabler:circle-plus-filled" size="24" />
         </button>
       </div>
     </form>
