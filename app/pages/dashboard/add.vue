@@ -6,14 +6,16 @@ import { InsertLocation } from "~~/lib/db/schema";
 
 const router = useRouter();
 
+const submitError = ref("");
+const loading = ref(false);
 const { handleSubmit, errors, meta, setErrors } = useForm({
   validationSchema: toTypedSchema(InsertLocation as unknown as ZodTypeAny),
 });
 
-const submitError = ref("");
-
 const onSubmit = handleSubmit(async (values) => {
   try {
+    submitError.value = "";
+    loading.value = true;
     await $fetch("/api/locations", {
       method: "post",
       body: values,
@@ -26,6 +28,8 @@ const onSubmit = handleSubmit(async (values) => {
     }
     submitError.value = error.statusMessage || "An unknown error occured.";
   }
+
+  loading.value = false;
 });
 
 onBeforeRouteLeave(() => {
@@ -53,25 +57,33 @@ onBeforeRouteLeave(() => {
       <span>{{ submitError }}</span>
     </div>
     <form class="flex flex-col gap-2" @submit.prevent="onSubmit">
-      <AppFormField name="name" label="Name" :error="errors.name" />
+      <AppFormField
+        name="name" label="Name" :error="errors.name"
+        :disabled="loading"
+      />
       <AppFormField
         name="description" label="Description" :error="errors.description"
-        type="textarea"
+        type="textarea" :disabled="loading"
       />
       <AppFormField
         name="lat" label="Latitude" type="number"
-        :error="errors.lat"
+        :error="errors.lat" :disabled="loading"
       />
       <AppFormField
         name="long" label="Longitude" type="number"
-        :error="errors.long"
+        :error="errors.long" :disabled="loading"
       />
       <div class="flex justify-end gap-2">
-        <button type="button" class="btn btn-outline" @click="router.back()">
+        <button
+          :disabled="loading" type="button" class="btn btn-outline"
+          @click="router.back()"
+        >
           <Icon name="tabler:arrow-left" size="24" /> Cancel
         </button>
-        <button type="submit" class="btn btn-primary">
-          Add <Icon name="tabler:circle-plus-filled" size="24" />
+        <button :disabled="loading" type="submit" class="btn btn-primary">
+          Add
+          <span v-if="loading" class="loading loading-spinner loading-sm" />
+          <Icon v-else name="tabler:circle-plus-filled" size="24" />
         </button>
       </div>
     </form>
