@@ -4,6 +4,7 @@ import type { ZodTypeAny } from "zod";
 
 import { InsertLocation } from "~~/lib/db/schema";
 
+const { $csrfFetch } = useNuxtApp();
 const router = useRouter();
 
 const submitError = ref("");
@@ -17,7 +18,7 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     submitError.value = "";
     loading.value = true;
-    await $fetch("/api/locations", {
+    await $csrfFetch("/api/locations", {
       method: "post",
       body: values,
     });
