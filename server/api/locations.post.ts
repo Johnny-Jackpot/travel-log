@@ -32,10 +32,25 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
+  // Check for unique slug or name before insert
+  const slug = result.data.name.replaceAll(" ", "-").toLowerCase();
+
+  const existing = await db.query.location.findFirst({
+    where: (loc, { eq }) => eq(loc.slug, slug),
+  });
+
+  if (existing) {
+    return sendError(event, createError({
+      statusCode: 409,
+      statusMessage: "Location with this name already exists.",
+      data: { name: "Location name must be unique." },
+    }));
+  }
+
   const [createdLocation] = await db.insert(location).values({
     ...result.data,
     userId: event.context.user.id,
-    slug: result.data.name.replaceAll(" ", "-").toLowerCase(),
+    slug,
   }).returning();
 
   return createdLocation;
