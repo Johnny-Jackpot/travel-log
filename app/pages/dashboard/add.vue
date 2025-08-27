@@ -8,6 +8,7 @@ const router = useRouter();
 
 const submitError = ref("");
 const loading = ref(false);
+const submitted = ref(false);
 const { handleSubmit, errors, meta, setErrors } = useForm({
   validationSchema: toTypedSchema(InsertLocation as unknown as ZodTypeAny),
 });
@@ -20,6 +21,8 @@ const onSubmit = handleSubmit(async (values) => {
       method: "post",
       body: values,
     });
+    submitted.value = true;
+    navigateTo("/dashboard");
   }
   catch (e) {
     const error = e as FetchError;
@@ -33,7 +36,7 @@ const onSubmit = handleSubmit(async (values) => {
 });
 
 onBeforeRouteLeave(() => {
-  if (!meta.value.dirty) {
+  if (!meta.value.dirty || submitted.value) {
     return true;
   }
   // eslint-disable-next-line no-alert
