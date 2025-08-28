@@ -1,5 +1,6 @@
 import db from "~~/lib/db";
 import { InsertLocation, location } from "~~/lib/db/schema";
+import { formatZodError } from "~~/shared/utils/validation";
 import { customAlphabet } from "nanoid";
 import slugify from "slug";
 
@@ -13,20 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const result = await readValidatedBody(event, InsertLocation.safeParse);
   if (!result.success) {
-    const statusMessage = result
-      .error
-      .issues
-      .map(issue => `${issue.path.join("")}: ${issue.message}`)
-      .join("; ");
-
-    const data = result
-      .error
-      .issues
-      .reduce((errors, issue) => {
-        errors[issue.path.join("")] = issue.message;
-        return errors;
-      }, {} as Record<string, string>);
-
+    const { statusMessage, data } = formatZodError(result);
     return sendError(event, createError({
       statusCode: 422,
       statusMessage,
