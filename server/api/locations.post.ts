@@ -1,8 +1,6 @@
-import db from "~~/lib/db";
-import { InsertLocation, location } from "~~/lib/db/schema";
+import { findLocationByName, findUniqueSlug, insertLocation } from "~~/lib/db/queries/location";
+import { InsertLocation } from "~~/lib/db/schema";
 import { formatZodError } from "~~/shared/utils/validation";
-import { and, eq } from "drizzle-orm";
-import { customAlphabet } from "nanoid";
 import slugify from "slug";
 
 export default defineEventHandler(async (event) => {
@@ -23,13 +21,7 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
-  const existing = await db.query.location.findFirst({
-    where:
-      and(
-        eq(location.name, result.data.name),
-        eq(location.userId, event.context.user.id),
-      ),
-  });
+  const existing = await findLocationByName(result.data.name, event.context.user.id);
   if (existing) {
     return sendError(event, createError({
       statusCode: 409,
@@ -38,26 +30,7 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
-  let slug = slugify(result.data.name, { lower: true });
-  let existingRecord = !!(await db.query.location.findFirst({
-    where: eq(location.slug, slug),
-  }));
-  const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz");
-  while (existingRecord) {
-    const idSlug = `${slug}-${nanoid(5)}`;
-    existingRecord = !!(await db.query.location.findFirst({
-      where: eq(location.slug, idSlug),
-    }));
-    if (!existingRecord) {
-      slug = idSlug;
-    }
-  }
+  const slug = await findUniqueSlug(slugify(result.data.name, { lower: true }));
 
-  const [createdLocation] = await db.insert(location).values({
-    ...result.data,
-    userId: event.context.user.id,
-    slug,
-  }).returning();
-
-  return createdLocation;
+  return insertLocation(result.data, slug, event.context.user.id);
 });
