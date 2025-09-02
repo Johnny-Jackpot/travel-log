@@ -38,9 +38,20 @@ export default defineEventHandler(async (event) => {
     }));
   }
 
-  const baseSlug = slugify(result.data.name, { lower: true });
+  let slug = slugify(result.data.name, { lower: true });
+  let existingRecord = !!(await db.query.location.findFirst({
+    where: eq(location.slug, slug),
+  }));
   const nanoid = customAlphabet("1234567890abcdefghijklmnopqrstuvwxyz");
-  const slug = `${baseSlug}-${nanoid(5)}`;
+  while (existingRecord) {
+    const idSlug = `${slug}-${nanoid(5)}`;
+    existingRecord = !!(await db.query.location.findFirst({
+      where: eq(location.slug, idSlug),
+    }));
+    if (!existingRecord) {
+      slug = idSlug;
+    }
+  }
 
   const [createdLocation] = await db.insert(location).values({
     ...result.data,
