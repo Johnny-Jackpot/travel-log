@@ -13,7 +13,7 @@ const route = useRoute();
   <div class="tooltip tooltip-right" :data-tip="props.showLabel ? undefined : props.label">
     <NuxtLink
       :to="props.href"
-      :class="route.path === href && 'bg-base-200'"
+      :class="route.path === props.href && 'bg-base-200'"
       class="flex justify-start gap-2 p-2 hover:bg-base-300 hover:cursor-pointer flex-nowrap"
     >
       <Icon :name="props.icon" size="24" class="flex-shrink-0" />

@@ -11,6 +11,8 @@ function toggleSidebar() {
   isSidebarOpen.value = !isSidebarOpen.value;
   localStorage.setItem("isSidebarOpen", isSidebarOpen.value.toString());
 }
+
+const sidebarStore = useSidebarStore();
 </script>
 
 <template>
@@ -31,6 +33,17 @@ function toggleSidebar() {
           :show-label="isSidebarOpen" label="Add Location" icon="tabler:circle-plus-filled"
           href="/dashboard/add"
         />
+        <div class="divider" />
+        <div class="flex flex-col">
+          <SidebarButton
+            v-for="item in sidebarStore.sidebarItems"
+            :key="item.id"
+            :show-label="isSidebarOpen"
+            :label="item.label"
+            :icon="item.icon"
+            :href="item.href"
+          />
+        </div>
         <div class="divider" />
         <SidebarButton
           :show-label="isSidebarOpen" label="Sign Out" icon="tabler:logout-2"
