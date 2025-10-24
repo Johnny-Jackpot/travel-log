@@ -10,6 +10,10 @@ const style = computed(() => {
     : "/styles/dark-map.json";
 });
 const zoom = 4;
+
+onMounted(() => {
+  mapStore.init();
+});
 </script>
 
 <template>

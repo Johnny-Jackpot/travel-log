@@ -20,6 +20,12 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
+    optimizeDeps: {
+      include: ["maplibre-gl"],
+    },
+    ssr: {
+      noExternal: ["@indoorequal/vue-maplibre-gl", "maplibre-gl"],
+    },
   },
   eslint: {
     config: {
