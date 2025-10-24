@@ -17,18 +17,20 @@ onMounted(() => {
 </script>
 
 <template>
-  <MglMap
-    :map-style="style"
-    :center="CENTER_UA"
-    :zoom="zoom"
-  >
-    <MglNavigationControl />
-    <MglMarker v-for="point in mapStore.mapPoints" :key="point.id" :coordinates="[point.long, point.lat]">
-      <template #marker>
-        <div class="tooltip tooltip-top" :data-tip="point.label">
-          <Icon name="tabler:map-pin-filled" class="text-secondary" size="30" />
-        </div>
-      </template>
-    </MglMarker>
-  </MglMap>
+  <div v-bind="$attrs" class="relative w-full h-full">
+    <MglMap
+      :map-style="style"
+      :center="CENTER_UA"
+      :zoom="zoom"
+    >
+      <MglNavigationControl />
+      <MglMarker v-for="point in mapStore.mapPoints" :key="point.id" :coordinates="[point.long, point.lat]">
+        <template #marker>
+          <div class="tooltip tooltip-top" :data-tip="point.label">
+            <Icon name="tabler:map-pin-filled" class="text-secondary" size="30" />
+          </div>
+        </template>
+      </MglMarker>
+    </MglMap>
+  </div>
 </template>

@@ -60,8 +60,8 @@ const sidebarStore = useSidebarStore();
       </div>
     </div>
     <div class="flex-1">
-      <NuxtPage class="h-1/2" />
-      <AppMap class="h-1/2" />
+      <NuxtPage />
+      <AppMap class="w-full" />
     </div>
   </div>
 </template>

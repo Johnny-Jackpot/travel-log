@@ -21,7 +21,8 @@ export const useMapStore = defineStore("useMapStore", () => {
         [firstPoint.long, firstPoint.lat],
       ));
 
-      map.map?.fitBounds(bounds, { padding: 60 });
+      map.map?.resize(); // fix map size when navigating from other page
+      map.map?.fitBounds(bounds, { padding: 60 }); // zoom map to fit all points
     });
   }
 
