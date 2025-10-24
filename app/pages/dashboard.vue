@@ -58,9 +58,11 @@ function toggleSidebar() {
         />
       </div>
     </div>
-    <div class="flex-1">
-      <NuxtPage />
-      <AppMap class="w-full" />
+    <div class="flex-1 overflow-auto">
+      <div class="flex flex-col size-full">
+        <NuxtPage />
+        <AppMap class="flex-1" />
+      </div>
     </div>
   </div>
 </template>
