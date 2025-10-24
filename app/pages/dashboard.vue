@@ -1,7 +1,8 @@
 <script setup lang="ts">
+const sidebarStore = useSidebarStore();
+const { isSidebarOpen } = storeToRefs(sidebarStore);
 const locationsStore = useLocationStore();
 const route = useRoute();
-const isSidebarOpen = ref(true);
 const showSidebar = ref(false);
 
 onMounted(() => {
@@ -16,8 +17,6 @@ function toggleSidebar() {
   isSidebarOpen.value = !isSidebarOpen.value;
   localStorage.setItem("isSidebarOpen", isSidebarOpen.value.toString());
 }
-
-const sidebarStore = useSidebarStore();
 </script>
 
 <template>
